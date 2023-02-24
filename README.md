@@ -44,11 +44,6 @@
 
 改进方法就是，对于源点云中的一个点，如果在目标点云中不存在和它的距离小于某个阈值的点，那么在此次迭代中就不考虑该点。同时，这个阈值随着迭代的进行不断减小的（有下限），这样就使得配准越来越精细。
 
-<div STYLE="page-break-after: always;"></div>
-
-## 关键代码
-
-### RANSAC
 
 实现中还涉及两个细节。
 
@@ -56,89 +51,6 @@
 
 二是如何判断两个三角形的差距？代码中如果对应边长度之差大于 `lengthThreshold` * 长度平均值。
 
-```python
-def RANSAC():
-    maxCount = 0
-    jisuan=0
-    j = 0
-    print("RANSACing...")
-    while True:
-        j += 1
-        // 随机选取三个点
-        srcCorr = random.sample(range(srcNum), 3)
-        // 如果某两个点距离太近，舍弃
-        if not notTooClose3([srcPoints[x] for x in srcCorr]):
-            continue
-            
-        // KD 树特征匹配
-        tgtCorr = []
-        for id in srcCorr:
-            k, idx, dis2 = tgtFpfhKDT.search_knn_vector_xd(srcFpfh[id], knn=1)
-            tgtCorr.append(random.choice(idx[0]))
-            
-        // 如果两个三角形差距太大，也舍弃
-        if True in [farAway(srcPoints[i[0]] - srcPoints[j[0]], 
-                            tgtPoints[i[1]] - tgtPoints[j[1]]) 
-                    for i in zip(srcCorr, tgtCorr) 
-                    for j in zip(srcCorr, tgtCorr)]:
-            continue
-        jisuan += 1
-        
-        // 得到变换矩阵
-        R, T = calculateTrans(np.array([srcPoints[i] for i in srcCorr]), 
-                              np.array([tgtPoints[i] for i in tgtCorr]))
-        A = np.transpose((R @ srcPoints.T) + np.tile(T, (1, srcNum)))
-        
-        //计算匹配数
-        count = 0
-        for point in range(0, srcNum, 1):
-            k, idx, dis2 = tgtKDT.search_hybrid_vector_3d(A[point], 
-                                                          radius=fitThreshold, max_nn=1)
-            count += k
-        
-        // 更新最大匹配
-        if count > maxCount:
-            maxCount = count
-            bestR, bestT = R, T
-        if jisuan > 50 and j > 1000:
-            break
-        
-    print("RANSAC calculated %d times, maximum matches: %d" % (jisuan, maxCount))
-    return bestR, bestT
-```
-
-### ICP
-
-```python
-def ICP(src, tgt):
-    limit = fitThreshold
-    retR = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-    retT = np.array([[0], [0], [0]])
-    trace = []
-    for _ in range(400):
-        tgtCorr = []
-        srcCorr = []
-        // 筛选距离近的点对
-        for point in src:
-            k, idx, dis2 = tgtKDT.search_knn_vector_3d(point, knn=1)
-            if dis2[0] < (limit)**2:
-                srcCorr.append(point)
-                tgtCorr.append(tgt[idx[0]])
-        trace.append([limit, len(srcCorr)])
-        R, T = calculateTrans(np.array(srcCorr), np.array(tgtCorr))
-        retR = R @ retR
-        retT = R @ retT + T
-        src = np.transpose((R @ src.T) + np.tile(T, (1, srcNum)))
-        // 阈值的衰减
-        limit = (limit - fitThreshold/1.5) * 0.95 + fitThreshold/1.5
-        // 自适应过程，如果匹配点对不变化说明算法收敛，退出迭代
-        if len(trace) > 50 and len(set([x[1] for x in trace[-20:]])) == 1:	
-            break
-    print("ICP trace is:", trace)
-    return retR, retT
-```
-
-<div STYLE="page-break-after: always;"></div>
 
 ## 效果
 
@@ -160,7 +72,7 @@ def ICP(src, tgt):
 
 粗配准：
 
-![image-20221124101122264](C:\Users\Hellsegamosken\AppData\Roaming\Typora\typora-user-images\image-20221124101122264.png)
+![image-20221124101122264](img\image-20221124101122264.png)
 
 精配准：
 
