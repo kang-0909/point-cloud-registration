@@ -38,7 +38,7 @@
 
 上面的算法可以较好地完成对形状、大小相同的点云配准。但是，如果直接应用在深度图上，会出现匹配不上的问题（下面为 single-depth 匹配结果的俯视图）：
 
-![image-20221123234534624](C:\Users\Hellsegamosken\AppData\Roaming\Typora\typora-user-images\image-20221123234534624.png)
+![image-20221123234534624](https://github.com/kang-0909/point-cloud-registration/blob/main/img/image-20221123234534624.png)
 
 这是因为 ICP 为每个源点云中的点，都从目标点云中找到一个距离最近的点和它匹配。但在深度图中，两个点云存在很多点本来就是不匹配的。如果强行令他们匹配，那么在最小二乘法的意义下最优解就是上图这样，一个点云被移动到了另一个的“中央”位置。
 
@@ -64,7 +64,7 @@
 
 精配准：
 
-![image-20221124100918968](C:\Users\Hellsegamosken\AppData\Roaming\Typora\typora-user-images\image-20221124100918968.png)
+![image-20221124100918968](https://github.com/kang-0909/point-cloud-registration/blob/main/img/image-20221124100918968.png)
 
 <div STYLE="page-break-after: always;"></div>
 
@@ -72,11 +72,11 @@
 
 粗配准：
 
-![image-20221124101122264](img\image-20221124101122264.png)
+![image-20221124101122264](https://github.com/kang-0909/point-cloud-registration/blob/main/img/image-20221124101122264.png)
 
 精配准：
 
-![image-20221124101146035](C:\Users\Hellsegamosken\AppData\Roaming\Typora\typora-user-images\image-20221124101146035.png)
+![image-20221124101146035](https://github.com/kang-0909/point-cloud-registration/blob/main/img/image-20221124101146035.png)
 
 <div STYLE="page-break-after: always;"></div>
 
@@ -84,11 +84,11 @@
 
 粗配准（降采样后）：
 
-![image-20221124101332069](C:\Users\Hellsegamosken\AppData\Roaming\Typora\typora-user-images\image-20221124101332069.png)
+![image-20221124101332069](https://github.com/kang-0909/point-cloud-registration/blob/main/img/image-20221124101332069.png)
 
 精配准：
 
-<img src="https://github.com/Hellsegamosken2001/point-cloud-registration/tree/main/img/image-20221123235845506.png" alt="image-20221123235845506" style="zoom: 50%;" />
+<img src="https://github.com/kang-0909/point-cloud-registration/blob/main/img/image-20221123235845506.png" alt="image-20221123235845506" style="zoom: 50%;" />
 
-<img src="https://github.com/Hellsegamosken2001/point-cloud-registration/tree/main/img/image-20221123235923880.png" alt="image-20221123235923880" style="zoom: 50%;" />
+<img src="https://github.com/kang-0909/point-cloud-registration/blob/main/img/image-20221123235923880.png" alt="image-20221123235923880" style="zoom: 50%;" />
 
