@@ -60,7 +60,7 @@
 
 粗配准：
 
-![image-20221124100844414](C:\Users\Hellsegamosken\AppData\Roaming\Typora\typora-user-images\image-20221124100844414.png)
+![image-20221124100844414]([C:\Users\Hellsegamosken\AppData\Roaming\Typora\typora-user-images\image-20221124100844414.png](https://github.com/kang-0909/point-cloud-registration/blob/main/img/image-20221124100844414.png))
 
 精配准：
 
